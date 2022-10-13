@@ -1,0 +1,4 @@
+htmlparser2	test
+jest-diff	test
+pretty-format	test
+ts-jest		test

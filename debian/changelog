@@ -1,0 +1,138 @@
+node-domutils (2.8.0-4) unstable; urgency=medium
+
+  * Team upload
+  * Source only upload
+
+ -- Yadd <yadd@debian.org>  Tue, 19 Oct 2021 14:31:25 +0200
+
+node-domutils (2.8.0-3) unstable; urgency=medium
+
+  * Team upload
+  * Binary upload to workaround circular test dependencies
+
+ -- Yadd <yadd@debian.org>  Sun, 17 Oct 2021 21:08:32 +0200
+
+node-domutils (2.8.0-2) unstable; urgency=medium
+
+  * Team upload
+  * Back to unstable
+
+ -- Yadd <yadd@debian.org>  Sat, 16 Oct 2021 08:29:59 +0200
+
+node-domutils (2.8.0-1) experimental; urgency=medium
+
+  * Team upload
+  * New upstream version 2.8.0
+  * Update node-dom* dependency versions
+
+ -- Yadd <yadd@debian.org>  Wed, 13 Oct 2021 12:55:23 +0200
+
+node-domutils (2.4.4-7) unstable; urgency=medium
+
+  * Team upload
+  * Enable upstream test using jest
+  * Update standards version to 4.6.0, no changes needed.
+  * Fix GitHub tags regex
+
+ -- Yadd <yadd@debian.org>  Wed, 13 Oct 2021 10:53:02 +0200
+
+node-domutils (2.4.4-6) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Remove constraints unnecessary since buster
+
+ -- Jelmer Vernooĳ <jelmer@debian.org>  Sat, 28 Aug 2021 23:48:16 +0100
+
+node-domutils (2.4.4-5) unstable; urgency=medium
+
+  * Team upload
+  * Source-only upload
+
+ -- Xavier Guimard <yadd@debian.org>  Sun, 10 Jan 2021 20:17:53 +0100
+
+node-domutils (2.4.4-4) unstable; urgency=medium
+
+  * Team upload
+  * Binary upload to workaround circular build dependencies
+
+ -- Xavier Guimard <yadd@debian.org>  Sun, 10 Jan 2021 09:54:45 +0100
+
+node-domutils (2.4.4-3) unstable; urgency=medium
+
+  * Team upload
+  * Back to unstable after successful tests
+
+ -- Xavier Guimard <yadd@debian.org>  Sat, 09 Jan 2021 22:06:12 +0100
+
+node-domutils (2.4.4-2) experimental; urgency=medium
+
+  * Team upload
+  * Indicate that it breaks node-css-select < 3.1.2~
+
+ -- Xavier Guimard <yadd@debian.org>  Sat, 09 Jan 2021 06:08:02 +0100
+
+node-domutils (2.4.4-1) experimental; urgency=medium
+
+  * Team upload
+  * Bump debhelper compatibility level to 13
+  * Declare compliance with policy 4.5.1
+  * Use dh-sequence-nodejs
+  * New upstream version 2.4.4
+  * Add dependency to node-domhandler ≥ 4
+
+ -- Xavier Guimard <yadd@debian.org>  Fri, 08 Jan 2021 14:37:13 +0100
+
+node-domutils (2.1.0-1) unstable; urgency=medium
+
+  * Team upload
+
+  [ Debian Janitor ]
+  * Set upstream metadata fields: Bug-Submit.
+
+  [ Xavier Guimard ]
+  * Declare compliance with policy 4.5.0
+  * New upstream version 2.1.0
+
+ -- Xavier Guimard <yadd@debian.org>  Fri, 15 May 2020 08:41:22 +0200
+
+node-domutils (2.0.0-2) unstable; urgency=medium
+
+  * Team upload
+  * Update debian/copyright links
+  * Fix dependencies
+
+ -- Xavier Guimard <yadd@debian.org>  Thu, 17 Oct 2019 22:12:51 +0200
+
+node-domutils (2.0.0-1) unstable; urgency=medium
+
+  * Team upload
+
+  [ Paolo Greppi ]
+  * Update Vcs fields for migration to https://salsa.debian.org/
+
+  [ Xavier Guimard ]
+  * Bump debhelper compatibility level to 12
+  * Declare compliance with policy 4.4.1
+  * Change section to javascript
+  * Add debian/gbp.conf
+  * Switch debian/watch to github source
+  * Add upstream/metadata
+  * New upstream version 2.0.0
+  * Switch install to pkg-js-tools
+  * Requires pkg-js-tools 0.9.17 to workaround tsc bug:
+    + Use debian/nodejs/extcopies to install tsc dependencies during build
+
+ -- Xavier Guimard <yadd@debian.org>  Wed, 16 Oct 2019 22:31:39 +0200
+
+node-domutils (1.5.1-2) unstable; urgency=medium
+
+  * Team upload
+  * Add node-htmlparser2 to build deps (Closes: #849281)
+
+ -- Pirate Praveen <praveen@debian.org>  Sat, 24 Dec 2016 21:48:44 +0530
+
+node-domutils (1.5.1-1) unstable; urgency=low
+
+  * Initial release (Closes: #848324)
+
+ -- Paolo Greppi <paolo.greppi@libpf.com>  Fri, 16 Dec 2016 16:11:21 +0100

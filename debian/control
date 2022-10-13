@@ -1,0 +1,35 @@
+Source: node-domutils
+Maintainer: Debian Javascript Maintainers <pkg-javascript-devel@lists.alioth.debian.org>
+Uploaders: Paolo Greppi <paolo.greppi@libpf.com>
+Section: javascript
+Testsuite: autopkgtest-pkg-nodejs
+Priority: optional
+Build-Depends: debhelper-compat (= 13)
+ , dh-sequence-nodejs (>= 0.9.61~)
+ , jest (>= 27) <!nocheck>
+ , node-dom-serializer
+ , node-domelementtype (>= 2.2.0~)
+ , node-domhandler (>= 4.2.0~)
+ , node-htmlparser2 (>= 5.0.0~) <!nocheck>
+ , node-typescript
+ , node-typescript-types
+ , ts-jest <!nocheck>
+Standards-Version: 4.6.0
+Vcs-Git: https://salsa.debian.org/js-team/node-domutils.git
+Vcs-Browser: https://salsa.debian.org/js-team/node-domutils
+Homepage: https://github.com/FB55/domutils
+Rules-Requires-Root: no
+
+Package: node-domutils
+Architecture: all
+Depends: ${misc:Depends}
+ , node-dom-serializer
+ , node-domelementtype (>= 2.2.0~)
+ , node-domhandler (>= 4.2.0~)
+Breaks: node-css-select (<< 3.1.2~)
+Description: utilities for working with htmlparser2's DOM
+ Node.js module that provides utilities (stringify, traversal,
+ manipulation and querying) for working with a DOM (Document Object
+ Model) created with the node-domhandler module.
+ .
+ Node.js is an event-based server-side JavaScript engine.
