@@ -1,39 +1,47 @@
-import { isTag, Node, Element, NodeWithChildren } from "domhandler";
+import {
+    isTag,
+    AnyNode,
+    ChildNode,
+    Element,
+    ParentNode,
+    hasChildren,
+} from "domhandler";
 
-const emptyArray: Node[] = [];
 /**
  * Get a node's children.
  *
+ * @category Traversal
  * @param elem Node to get the children of.
  * @returns `elem`'s children, or an empty array.
  */
-export function getChildren(elem: Node): Node[] {
-    return (elem as { children?: Node[] }).children ?? emptyArray;
+export function getChildren(elem: AnyNode): ChildNode[] {
+    return hasChildren(elem) ? elem.children : [];
 }
 
-export function getParent(elem: Element): Element | null;
-export function getParent(elem: Node): NodeWithChildren | null;
+export function getParent(elem: AnyNode): ParentNode | null;
 /**
  * Get a node's parent.
  *
+ * @category Traversal
  * @param elem Node to get the parent of.
- * @returns `elem`'s parent node.
+ * @returns `elem`'s parent node, or `null` if `elem` is a root node.
  */
-export function getParent(elem: Node): NodeWithChildren | null {
+export function getParent(elem: AnyNode): ParentNode | null {
     return elem.parent || null;
 }
 
 /**
  * Gets an elements siblings, including the element itself.
  *
- * Attempts to get the children through the element's parent first.
- * If we don't have a parent (the element is a root node),
- * we walk the element's `prev` & `next` to get all remaining nodes.
+ * Attempts to get the children through the element's parent first. If we don't
+ * have a parent (the element is a root node), we walk the element's `prev` &
+ * `next` to get all remaining nodes.
  *
+ * @category Traversal
  * @param elem Element to get the siblings of.
- * @returns `elem`'s siblings.
+ * @returns `elem`'s siblings, including `elem`.
  */
-export function getSiblings(elem: Node): Node[] {
+export function getSiblings(elem: AnyNode): AnyNode[] {
     const parent = getParent(elem);
     if (parent != null) return getChildren(parent);
 
@@ -53,6 +61,7 @@ export function getSiblings(elem: Node): Node[] {
 /**
  * Gets an attribute from an element.
  *
+ * @category Traversal
  * @param elem Element to check.
  * @param name Attribute name to retrieve.
  * @returns The element's attribute value, or `undefined`.
@@ -67,6 +76,7 @@ export function getAttributeValue(
 /**
  * Checks whether an element has an attribute.
  *
+ * @category Traversal
  * @param elem Element to check.
  * @param name Attribute name to look for.
  * @returns Returns whether `elem` has the attribute `name`.
@@ -82,6 +92,7 @@ export function hasAttrib(elem: Element, name: string): boolean {
 /**
  * Get the tag name of an element.
  *
+ * @category Traversal
  * @param elem The element to get the name for.
  * @returns The tag name of `elem`.
  */
@@ -92,10 +103,12 @@ export function getName(elem: Element): string {
 /**
  * Returns the next element sibling of a node.
  *
+ * @category Traversal
  * @param elem The element to get the next sibling of.
- * @returns `elem`'s next sibling that is a tag.
+ * @returns `elem`'s next sibling that is a tag, or `null` if there is no next
+ * sibling.
  */
-export function nextElementSibling(elem: Node): Element | null {
+export function nextElementSibling(elem: AnyNode): Element | null {
     let { next } = elem;
     while (next !== null && !isTag(next)) ({ next } = next);
     return next;
@@ -104,10 +117,12 @@ export function nextElementSibling(elem: Node): Element | null {
 /**
  * Returns the previous element sibling of a node.
  *
+ * @category Traversal
  * @param elem The element to get the previous sibling of.
- * @returns `elem`'s previous sibling that is a tag.
+ * @returns `elem`'s previous sibling that is a tag, or `null` if there is no
+ * previous sibling.
  */
-export function prevElementSibling(elem: Node): Element | null {
+export function prevElementSibling(elem: AnyNode): Element | null {
     let { prev } = elem;
     while (prev !== null && !isTag(prev)) ({ prev } = prev);
     return prev;

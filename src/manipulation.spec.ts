@@ -1,5 +1,12 @@
 import { parseDOM } from "htmlparser2";
-import { append, appendChild, prepend, prependChild } from "./manipulation";
+import {
+    append,
+    appendChild,
+    prepend,
+    prependChild,
+    replaceElement,
+    removeElement,
+} from "./manipulation.js";
 import type { Element } from "domhandler";
 
 describe("manipulation", () => {
@@ -81,6 +88,47 @@ describe("manipulation", () => {
             `);
         });
     });
+    describe("removeElement", () => {
+        it("should correctly remove element", () => {
+            const dom = parseDOM(
+                "<div><p><img/><object/></p><p></p></div>"
+            )[0] as Element;
+            const parents = dom.children as Element[];
+
+            const image = parents[0].children[0];
+
+            removeElement(image);
+
+            expect(image.next).toBeNull();
+            expect(image.prev).toBeNull();
+            expect(image.parent).toBeNull();
+
+            expect(dom).toMatchInlineSnapshot(`
+                <div>
+                  <p>
+                    <object />
+                  </p>
+                  <p />
+                </div>
+            `);
+
+            appendChild(parents[1], image);
+
+            expect(parents[0].children).toHaveLength(1);
+            expect(parents[1].children).toHaveLength(1);
+
+            expect(dom).toMatchInlineSnapshot(`
+                <div>
+                  <p>
+                    <object />
+                  </p>
+                  <p>
+                    <img />
+                  </p>
+                </div>
+            `);
+        });
+    });
     describe("prepend", () => {
         it("should not be duplicated when called twice", () => {
             const dom = parseDOM(
@@ -153,6 +201,25 @@ describe("manipulation", () => {
                     <span />
                     <object />
                   </p>
+                </div>
+            `);
+        });
+    });
+    describe("replaceElement", () => {
+        it("should allow replaced elements to be appended later (#966)", () => {
+            const div = parseDOM("<div><p>")[0] as Element;
+            const template = parseDOM("<template></template>")[0] as Element;
+            const p = div.children[0];
+
+            // We want to wrap the inner <p> in a <template>
+            replaceElement(p, template);
+            appendChild(template, p);
+
+            expect(div).toMatchInlineSnapshot(`
+                <div>
+                  <template>
+                    <p />
+                  </template>
                 </div>
             `);
         });

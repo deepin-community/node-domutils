@@ -1,4 +1,8 @@
+domelementtype
+domhandler
+dom-serializer
+entities	test
 htmlparser2	test
-jest-diff	test
-pretty-format	test
+@types/jest	test
 ts-jest		test
+@types/node

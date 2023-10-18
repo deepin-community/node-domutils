@@ -1,12 +1,14 @@
-import { hasChildren, Node } from "domhandler";
+import { hasChildren, AnyNode, ParentNode } from "domhandler";
 
 /**
- * Given an array of nodes, remove any member that is contained by another.
+ * Given an array of nodes, remove any member that is contained by another
+ * member.
  *
+ * @category Helpers
  * @param nodes Nodes to filter.
- * @returns Remaining nodes that aren't subtrees of each other.
+ * @returns Remaining nodes that aren't contained by other nodes.
  */
-export function removeSubsets(nodes: Node[]): Node[] {
+export function removeSubsets(nodes: AnyNode[]): AnyNode[] {
     let idx = nodes.length;
 
     /*
@@ -36,8 +38,10 @@ export function removeSubsets(nodes: Node[]): Node[] {
 
     return nodes;
 }
-
-// Source: http://dom.spec.whatwg.org/#dom-node-comparedocumentposition
+/**
+ * @category Helpers
+ * @see {@link http://dom.spec.whatwg.org/#dom-node-comparedocumentposition}
+ */
 export const enum DocumentPosition {
     DISCONNECTED = 1,
     PRECEDING = 2,
@@ -47,8 +51,8 @@ export const enum DocumentPosition {
 }
 
 /**
- * Compare the position of one node against another node in any other document.
- * The return value is a bitmask with the following values:
+ * Compare the position of one node against another node in any other document,
+ * returning a bitmask with the values from {@link DocumentPosition}.
  *
  * Document order:
  * > There is an ordering, document order, defined on all the nodes in the
@@ -59,11 +63,12 @@ export const enum DocumentPosition {
  * > Thus, document order orders element nodes in order of the occurrence of
  * > their start-tag in the XML (after expansion of entities). The attribute
  * > nodes of an element occur after the element and before its children. The
- * > relative order of attribute nodes is implementation-dependent./
+ * > relative order of attribute nodes is implementation-dependent.
  *
  * Source:
  * http://www.w3.org/TR/DOM-Level-3-Core/glossary.html#dt-document-order
  *
+ * @category Helpers
  * @param nodeA The first node to use in the comparison
  * @param nodeB The second node to use in the comparison
  * @returns A bitmask describing the input nodes' relative position.
@@ -71,9 +76,12 @@ export const enum DocumentPosition {
  * See http://dom.spec.whatwg.org/#dom-node-comparedocumentposition for
  * a description of these values.
  */
-export function compareDocumentPosition(nodeA: Node, nodeB: Node): number {
-    const aParents = [];
-    const bParents = [];
+export function compareDocumentPosition(
+    nodeA: AnyNode,
+    nodeB: AnyNode
+): number {
+    const aParents: ParentNode[] = [];
+    const bParents: ParentNode[] = [];
 
     if (nodeA === nodeB) {
         return 0;
@@ -101,7 +109,7 @@ export function compareDocumentPosition(nodeA: Node, nodeB: Node): number {
     }
 
     const sharedParent = aParents[idx - 1];
-    const siblings = sharedParent.children;
+    const siblings: AnyNode[] = sharedParent.children;
     const aSibling = aParents[idx];
     const bSibling = bParents[idx];
 
@@ -118,14 +126,15 @@ export function compareDocumentPosition(nodeA: Node, nodeB: Node): number {
 }
 
 /**
- * Sort an array of nodes based on their relative position in the document and
- * remove any duplicate nodes. If the array contains nodes that do not belong
+ * Sort an array of nodes based on their relative position in the document,
+ * removing any duplicate nodes. If the array contains nodes that do not belong
  * to the same document, sort order is unspecified.
  *
+ * @category Helpers
  * @param nodes Array of DOM nodes.
  * @returns Collection of unique nodes, sorted in document order.
  */
-export function uniqueSort<T extends Node>(nodes: T[]): T[] {
+export function uniqueSort<T extends AnyNode>(nodes: T[]): T[] {
     nodes = nodes.filter((node, i, arr) => !arr.includes(node, i + 1));
 
     nodes.sort((a, b) => {

@@ -1,0 +1,22 @@
+Description: workaround bad jest config
+ It reported an error like:
+ .
+   entities/lib/decode.js not found
+ .
+ This fail with jest >= 28
+Author: Yadd <yadd@debian.org>
+Bug-Debian: https://bugs.debian.org/1011828
+Forwarded: no
+Last-Update: 2023-05-02
+
+--- a/package.json
++++ b/package.json
+@@ -67,7 +67,7 @@
+         "testEnvironment": "node",
+         "coverageProvider": "v8",
+         "moduleNameMapper": {
+-            "^(.*)\\.js$": [
++            "^([^e].*)\\.js$": [
+                 "$1.js",
+                 "$1"
+             ]
