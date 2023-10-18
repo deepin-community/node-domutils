@@ -1,7 +1,12 @@
-import type { Node, Element } from "domhandler";
-import { textContent } from "./stringify";
-import { getElementsByTagName } from "./legacy";
+import type { AnyNode, Element } from "domhandler";
+import { textContent } from "./stringify.js";
+import { getElementsByTagName } from "./legacy.js";
 
+/**
+ * The medium of a media item.
+ *
+ * @category Feeds
+ */
 export type FeedItemMediaMedium =
     | "image"
     | "audio"
@@ -9,8 +14,18 @@ export type FeedItemMediaMedium =
     | "document"
     | "executable";
 
+/**
+ * The type of a media item.
+ *
+ * @category Feeds
+ */
 export type FeedItemMediaExpression = "sample" | "full" | "nonstop";
 
+/**
+ * A media item of a feed entry.
+ *
+ * @category Feeds
+ */
 export interface FeedItemMedia {
     medium: FeedItemMediaMedium | undefined;
     isDefault: boolean;
@@ -28,6 +43,11 @@ export interface FeedItemMedia {
     lang?: string;
 }
 
+/**
+ * An entry of a feed.
+ *
+ * @category Feeds
+ */
 export interface FeedItem {
     id?: string;
     title?: string;
@@ -37,6 +57,11 @@ export interface FeedItem {
     media: FeedItemMedia[];
 }
 
+/**
+ * The root of a feed.
+ *
+ * @category Feeds
+ */
 export interface Feed {
     type: string;
     id?: string;
@@ -51,10 +76,11 @@ export interface Feed {
 /**
  * Get the feed object from the root of a DOM tree.
  *
+ * @category Feeds
  * @param doc - The DOM to to extract the feed from.
  * @returns The feed.
  */
-export function getFeed(doc: Node[]): Feed | null {
+export function getFeed(doc: AnyNode[]): Feed | null {
     const feedRoot = getOneElement(isValidFeed, doc);
 
     return !feedRoot
@@ -82,7 +108,7 @@ function getAtomFeed(feedRoot: Element) {
             addConditionally(entry, "id", "id", children);
             addConditionally(entry, "title", "title", children);
 
-            const href = getOneElement("link", children)?.attribs.href;
+            const href = getOneElement("link", children)?.attribs["href"];
             if (href) {
                 entry.link = href;
             }
@@ -104,7 +130,7 @@ function getAtomFeed(feedRoot: Element) {
 
     addConditionally(feed, "id", "id", childs);
     addConditionally(feed, "title", "title", childs);
-    const href = getOneElement("link", childs)?.attribs.href;
+    const href = getOneElement("link", childs)?.attribs["href"];
     if (href) {
         feed.link = href;
     }
@@ -140,7 +166,8 @@ function getRssFeed(feedRoot: Element) {
                 addConditionally(entry, "title", "title", children);
                 addConditionally(entry, "link", "link", children);
                 addConditionally(entry, "description", "description", children);
-                const pubDate = fetch("pubDate", children);
+                const pubDate =
+                    fetch("pubDate", children) || fetch("dc:date", children);
                 if (pubDate) entry.pubDate = new Date(pubDate);
 
                 return entry;
@@ -180,15 +207,15 @@ const MEDIA_KEYS_INT = [
  * @param where Nodes to search in.
  * @returns Media elements.
  */
-function getMediaElements(where: Node | Node[]): FeedItemMedia[] {
+function getMediaElements(where: AnyNode[]): FeedItemMedia[] {
     return getElementsByTagName("media:content", where).map((elem) => {
         const { attribs } = elem;
 
         const media: FeedItemMedia = {
-            medium: attribs.medium as unknown as
+            medium: attribs["medium"] as unknown as
                 | FeedItemMediaMedium
                 | undefined,
-            isDefault: !!attribs.isDefault,
+            isDefault: !!attribs["isDefault"],
         };
 
         for (const attrib of MEDIA_KEYS_STRING) {
@@ -203,9 +230,10 @@ function getMediaElements(where: Node | Node[]): FeedItemMedia[] {
             }
         }
 
-        if (attribs.expression) {
-            media.expression =
-                attribs.expression as unknown as FeedItemMediaExpression;
+        if (attribs["expression"]) {
+            media.expression = attribs[
+                "expression"
+            ] as unknown as FeedItemMediaExpression;
         }
 
         return media;
@@ -221,7 +249,7 @@ function getMediaElements(where: Node | Node[]): FeedItemMedia[] {
  */
 function getOneElement(
     tagName: string | ((name: string) => boolean),
-    node: Node | Node[]
+    node: AnyNode[]
 ): Element | null {
     return getElementsByTagName(tagName, node, true, 1)[0];
 }
@@ -230,11 +258,15 @@ function getOneElement(
  * Get the text content of an element with a certain tag name.
  *
  * @param tagName Tag name to look for.
- * @param where  Node to search in.
+ * @param where Node to search in.
  * @param recurse Whether to recurse into child nodes.
  * @returns The text content of the element.
  */
-function fetch(tagName: string, where: Node | Node[], recurse = false): string {
+function fetch(
+    tagName: string,
+    where: AnyNode | AnyNode[],
+    recurse = false
+): string {
     return textContent(getElementsByTagName(tagName, where, recurse, 1)).trim();
 }
 
@@ -251,7 +283,7 @@ function addConditionally<T>(
     obj: T,
     prop: keyof T,
     tagName: string,
-    where: Node | Node[],
+    where: AnyNode[],
     recurse = false
 ) {
     const val = fetch(tagName, where, recurse);

@@ -1,1 +1,1 @@
-jest -u --ci
+jest -u --ci --modulePathIgnorePatterns .pc

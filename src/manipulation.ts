@@ -1,27 +1,35 @@
-import type { Node, Element } from "domhandler";
+import type { ChildNode, ParentNode } from "domhandler";
 
 /**
  * Remove an element from the dom
  *
+ * @category Manipulation
  * @param elem The element to be removed
  */
-export function removeElement(elem: Node): void {
+export function removeElement(elem: ChildNode): void {
     if (elem.prev) elem.prev.next = elem.next;
     if (elem.next) elem.next.prev = elem.prev;
 
     if (elem.parent) {
         const childs = elem.parent.children;
-        childs.splice(childs.lastIndexOf(elem), 1);
+        const childsIndex = childs.lastIndexOf(elem);
+        if (childsIndex >= 0) {
+            childs.splice(childsIndex, 1);
+        }
     }
+    elem.next = null;
+    elem.prev = null;
+    elem.parent = null;
 }
 
 /**
  * Replace an element in the dom
  *
+ * @category Manipulation
  * @param elem The element to be replaced
  * @param replacement The element to be added
  */
-export function replaceElement(elem: Node, replacement: Node): void {
+export function replaceElement(elem: ChildNode, replacement: ChildNode): void {
     const prev = (replacement.prev = elem.prev);
     if (prev) {
         prev.next = replacement;
@@ -36,23 +44,25 @@ export function replaceElement(elem: Node, replacement: Node): void {
     if (parent) {
         const childs = parent.children;
         childs[childs.lastIndexOf(elem)] = replacement;
+        elem.parent = null;
     }
 }
 
 /**
  * Append a child to an element.
  *
- * @param elem The element to append to.
+ * @category Manipulation
+ * @param parent The element to append to.
  * @param child The element to be added as a child.
  */
-export function appendChild(elem: Element, child: Node): void {
+export function appendChild(parent: ParentNode, child: ChildNode): void {
     removeElement(child);
 
     child.next = null;
-    child.parent = elem;
+    child.parent = parent;
 
-    if (elem.children.push(child) > 1) {
-        const sibling = elem.children[elem.children.length - 2];
+    if (parent.children.push(child) > 1) {
+        const sibling = parent.children[parent.children.length - 2];
         sibling.next = child;
         child.prev = sibling;
     } else {
@@ -63,10 +73,11 @@ export function appendChild(elem: Element, child: Node): void {
 /**
  * Append an element after another.
  *
+ * @category Manipulation
  * @param elem The element to append after.
  * @param next The element be added.
  */
-export function append(elem: Node, next: Node): void {
+export function append(elem: ChildNode, next: ChildNode): void {
     removeElement(next);
 
     const { parent } = elem;
@@ -91,17 +102,18 @@ export function append(elem: Node, next: Node): void {
 /**
  * Prepend a child to an element.
  *
- * @param elem The element to prepend before.
+ * @category Manipulation
+ * @param parent The element to prepend before.
  * @param child The element to be added as a child.
  */
-export function prependChild(elem: Element, child: Node): void {
+export function prependChild(parent: ParentNode, child: ChildNode): void {
     removeElement(child);
 
-    child.parent = elem;
+    child.parent = parent;
     child.prev = null;
 
-    if (elem.children.unshift(child) !== 1) {
-        const sibling = elem.children[1];
+    if (parent.children.unshift(child) !== 1) {
+        const sibling = parent.children[1];
         sibling.prev = child;
         child.next = sibling;
     } else {
@@ -112,10 +124,11 @@ export function prependChild(elem: Element, child: Node): void {
 /**
  * Prepend an element before another.
  *
+ * @category Manipulation
  * @param elem The element to prepend before.
  * @param prev The element be added.
  */
-export function prepend(elem: Node, prev: Node): void {
+export function prepend(elem: ChildNode, prev: ChildNode): void {
     removeElement(prev);
 
     const { parent } = elem;
